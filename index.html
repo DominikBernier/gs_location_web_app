@@ -26,24 +26,19 @@
         }
 
         function sendLocation(lat, lng) {
-            let url = "https://script.google.com/macros/s/AKfycby-InjRFA649_UeMAMMJrU2qWQXZr_v0fbdXeEFTXJPNCRQAFcArygYLL8kO4lGfRBY/exec";
+            let url = "https://script.google.com/macros/s/AKfycby2so17BwMXxFvT_B-2NRZdz0Gx-AT-nYmx9dFZK0si2YFaNoQ-cgIDC3l7VD7Gnwz0/exec";
         
             let requestData = { latitude: lat, longitude: lng };
             
-                fetch(url, {
+            fetch(url, {
                     method: "POST",
-                    mode: "cors",  // ✅ Ensures CORS request
-                    credentials: "omit",  // ✅ Prevents sending cookies
+                    mode: "cors",
+                    redirect: "follow",  // ✅ Automatically follows redirects
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(requestData)
                 })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! Status: ${response.status}`);
-                    }
-                    return response.json();  // ✅ Ensure proper JSON handling
-                })
-                .then(data => console.log("Response:", data))
+                .then(response => response.json())
+                .then(data => console.log("Success:", data))
                 .catch(error => console.error("Fetch Error:", error));
         }
 
