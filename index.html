@@ -34,11 +34,11 @@
                 body: JSON.stringify(requestData),
                 headers: {
                     "Content-Type": "text/plain;charset=utf-8",
-                    },
-                })
-                .then(response => response.json())
-                .then(data => console.log("Success:", data))
-                .catch(error => console.error("Fetch Error:", error));
+                },
+            })
+            .then(response => response.json())
+            .then(data => displayResults(data))
+            .catch(error => console.error("Fetch Error:", error));
         }
 
         function displayResults(data) {
@@ -50,13 +50,72 @@
                 return;
             }
 
-            let output = `<h3>Nearby Locations:</h3><ul>`;
-            data.forEach(client => {
-                output += `<li><strong>${client.name}</strong> - ${client.address} (⏳ ${client.travel_time}, 📏 ${client.distance})</li>`;
-            });
-            output += `</ul>`;
+            if (data.length === 0) {
+                resultDiv.innerHTML = "<p>No locations found.</p>";
+                return;
+            }
 
-            resultDiv.innerHTML = output;
+            // Create table
+            let table = document.createElement("table");
+            table.border = "1";
+            table.style.borderCollapse = "collapse";
+            table.style.width = "100%";
+            table.style.marginTop = "10px";
+
+            // Create table header
+            let thead = document.createElement("thead");
+            let headerRow = document.createElement("tr");
+            let headers = ["Name", "Address", "Distance", "Travel Time"];
+            
+            headers.forEach(text => {
+                let th = document.createElement("th");
+                th.textContent = text;
+                th.style.border = "1px solid black";
+                th.style.padding = "8px";
+                th.style.textAlign = "left";
+                headerRow.appendChild(th);
+            });
+
+            thead.appendChild(headerRow);
+            table.appendChild(thead);
+
+            // Create table body
+            let tbody = document.createElement("tbody");
+            data.forEach(entry => {
+                let row = document.createElement("tr");
+
+                let nameCell = document.createElement("td");
+                nameCell.textContent = entry.name;
+                nameCell.style.border = "1px solid black";
+                nameCell.style.padding = "8px";
+
+                let addressCell = document.createElement("td");
+                addressCell.textContent = entry.address;
+                addressCell.style.border = "1px solid black";
+                addressCell.style.padding = "8px";
+
+                let distanceCell = document.createElement("td");
+                distanceCell.textContent = entry.distance;
+                distanceCell.style.border = "1px solid black";
+                distanceCell.style.padding = "8px";
+
+                let travelTimeCell = document.createElement("td");
+                travelTimeCell.textContent = entry.travel_time;
+                travelTimeCell.style.border = "1px solid black";
+                travelTimeCell.style.padding = "8px";
+
+                row.appendChild(nameCell);
+                row.appendChild(addressCell);
+                row.appendChild(distanceCell);
+                row.appendChild(travelTimeCell);
+
+                tbody.appendChild(row);
+            });
+
+            table.appendChild(tbody);
+
+            // Append table to results div
+            resultDiv.appendChild(table);
             document.getElementById("status").innerText = "Results received!";
         }
     </script>
@@ -68,3 +127,4 @@
     <div id="results"></div>
 </body>
 </html>
+
