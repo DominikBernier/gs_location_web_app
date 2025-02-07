@@ -26,12 +26,11 @@
         }
 
         function sendLocation(lat, lng) {
-            let proxyUrl = "https://cors-anywhere.herokuapp.com/";
             let url = "https://script.google.com/macros/s/AKfycbxRHUPxeK_na825xisYZCLKA-kh2ynV6xMeD_aaneb7ranS1KQQGwJBqKxSJL5Env9v/exec";
         
             let requestData = { latitude: lat, longitude: lng };
         
-            fetch(proxyUrl + url, {
+            fetch(url, {
                 method: "POST",
                 mode: "cors",  // Ensure the browser sends a CORS request
                 credentials: "omit",  // Prevent sending credentials
