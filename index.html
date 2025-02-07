@@ -31,11 +31,11 @@
             let requestData = { latitude: lat, longitude: lng };
         
             fetch(url, {
-                method: "POST",
-                mode: "cors",  // Ensure the browser sends a CORS request
-                credentials: "omit",  // Prevent sending credentials
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(requestData)
+                method: 'POST',
+                body: data,
+                headers: {
+                    'Content-Type': 'text/plain;charset=utf-8',
+                }
             })
             .then(response => {
                 if (!response.ok) {
