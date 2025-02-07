@@ -26,23 +26,28 @@
         }
 
         function sendLocation(lat, lng) {
-            let url = "https://script.google.com/macros/s/AKfycbzekHmAw3WSi5OKDMeAD7IJMDGDNqAU5_X-g_bEO6VdYgkL5pm2xbbWSQPncvM8xT0d/exec"; // Replace with your actual Web App URL
-            
-            let requestData = {
-                latitude: lat,
-                longitude: lng
-            };
-
+            let url = "https://script.google.com/macros/s/YOUR_DEPLOYED_SCRIPT_ID/exec";
+        
+            let requestData = { latitude: lat, longitude: lng };
+        
             fetch(url, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(requestData)
-                })
-                .then(response => response.json())
-                .then(data => displayResults(data))
-                .catch(error => {
-                    document.getElementById("status").innerText = "Error sending data: " + error.message;
-                });
+                method: "POST",
+                mode: "cors",  // Ensure the browser sends a CORS request
+                credentials: "omit",  // Prevent sending credentials
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(requestData)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => displayResults(data))
+            .catch(error => {
+                console.error("Fetch Error:", error);
+                document.getElementById("status").innerText = "Error sending data: " + error.message;
+            });
         }
 
         function displayResults(data) {
