@@ -26,28 +26,27 @@
         }
 
         function sendLocation(lat, lng) {
-            let url = "https://script.google.com/macros/s/AKfycbyNxrtQOZpSWylxGeIYElM7GV8DyGpDHdtCrFtAXTYmbXYCLVkwk1LFbZ978JMImXsA/exec";
+            let url = "https://script.google.com/macros/s/AKfycbzdP7Mu9QUCKDftGMx81OxDLjhp7sraHkP79we0ZUgzvG9ylsj_DisN4aDP_omtB3CD/exec";
         
             let requestData = { latitude: lat, longitude: lng };
         
-            fetch(url, {
-                method: 'POST',
-                body: requestData,
-                headers: {
-                    'Content-Type': 'text/plain;charset=utf-8',
-                }
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(data => displayResults(data))
-            .catch(error => {
-                console.error("Fetch Error:", error);
-                document.getElementById("status").innerText = "Error sending data: " + error.message;
-            });
+            let requestData = { latitude: lat, longitude: lng };
+            
+                fetch(url, {
+                    method: "POST",
+                    mode: "cors",  // ✅ Ensures CORS request
+                    credentials: "omit",  // ✅ Prevents sending cookies
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(requestData)
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.json();  // ✅ Ensure proper JSON handling
+                })
+                .then(data => console.log("Response:", data))
+                .catch(error => console.error("Fetch Error:", error));
         }
 
         function displayResults(data) {
