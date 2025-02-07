@@ -26,7 +26,7 @@
         }
 
         function sendLocation(lat, lng) {
-            let url = "https://script.google.com/macros/s/AKfycbzzEdXl3y_NMpiTLWZ7XF-H4S6y1qP7UqnhoqqntQHRKmMqUzrPGkqApf-hFCFIKnVK/exec"; // Replace with your actual Web App URL
+            let url = "https://script.google.com/macros/s/AKfycbzekHmAw3WSi5OKDMeAD7IJMDGDNqAU5_X-g_bEO6VdYgkL5pm2xbbWSQPncvM8xT0d/exec"; // Replace with your actual Web App URL
             
             let requestData = {
                 latitude: lat,
@@ -34,15 +34,15 @@
             };
 
             fetch(url, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(requestData)
-            })
-            .then(response => response.json())
-            .then(data => displayResults(data))
-            .catch(error => {
-                document.getElementById("status").innerText = "Error sending data: " + error.message;
-            });
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(requestData)
+                })
+                .then(response => response.json())
+                .then(data => displayResults(data))
+                .catch(error => {
+                    document.getElementById("status").innerText = "Error sending data: " + error.message;
+                });
         }
 
         function displayResults(data) {
