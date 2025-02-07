@@ -6,6 +6,8 @@
     <title>Location Finder</title>
     <script>
         function getLocation() {
+            sendLocation(45.630001, -73.519997);
+            /*
             if ("geolocation" in navigator) {
                 navigator.geolocation.getCurrentPosition(
                     function(position) {
@@ -20,7 +22,7 @@
                 );
             } else {
                 document.getElementById("status").innerText = "Geolocation not supported by this browser.";
-            }
+            } */
         }
 
         function sendLocation(lat, lng) {
