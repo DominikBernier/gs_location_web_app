@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Location Finder</title>
+    <script>
+        function getLocation() {
+            if ("geolocation" in navigator) {
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        let latitude = position.coords.latitude;
+                        let longitude = position.coords.longitude;
+                        document.getElementById("status").innerText = "Location obtained! Sending...";
+                        sendLocation(latitude, longitude);
+                    },
+                    function(error) {
+                        document.getElementById("status").innerText = "Error getting location: " + error.message;
+                    }
+                );
+            } else {
+                document.getElementById("status").innerText = "Geolocation not supported by this browser.";
+            }
+        }
+
+        function sendLocation(lat, lng) {
+            let url = "https://script.google.com/macros/s/AKfycbzzEdXl3y_NMpiTLWZ7XF-H4S6y1qP7UqnhoqqntQHRKmMqUzrPGkqApf-hFCFIKnVK/exec"; // Replace with your actual Web App URL
+            
+            let requestData = {
+                latitude: lat,
+                longitude: lng
+            };
+
+            fetch(url, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(requestData)
+            })
+            .then(response => response.json())
+            .then(data => displayResults(data))
+            .catch(error => {
+                document.getElementById("status").innerText = "Error sending data: " + error.message;
+            });
+        }
+
+        function displayResults(data) {
+            let resultDiv = document.getElementById("results");
+            resultDiv.innerHTML = ""; // Clear previous results
+            
+            if (data.error) {
+                resultDiv.innerHTML = `<p>Error: ${data.error}</p>`;
+                return;
+            }
+
+            let output = `<h3>Nearby Locations:</h3><ul>`;
+            data.forEach(client => {
+                output += `<li><strong>${client.name}</strong> - ${client.address} (⏳ ${client.travel_time}, 📏 ${client.distance})</li>`;
+            });
+            output += `</ul>`;
+
+            resultDiv.innerHTML = output;
+            document.getElementById("status").innerText = "Results received!";
+        }
+    </script>
+</head>
+<body>
+    <h2>Find Nearby Locations</h2>
+    <button onclick="getLocation()">Get My Location</button>
+    <p id="status">Click the button to find locations.</p>
+    <div id="results"></div>
+</body>
+</html>
