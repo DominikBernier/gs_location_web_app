@@ -26,16 +26,17 @@
         }
 
         function sendLocation(lat, lng) {
-            let url = "https://script.google.com/macros/s/AKfycby2so17BwMXxFvT_B-2NRZdz0Gx-AT-nYmx9dFZK0si2YFaNoQ-cgIDC3l7VD7Gnwz0/exec";
+            let url = "https://script.google.com/macros/s/AKfycbwcFfPAA7pJJLy-pencEU30TqMY0Nz2DNVad6olZlfYga6qJCTPcKLR11CrUy7zwqoo/exec";
         
             let requestData = { latitude: lat, longitude: lng };
             
             fetch(url, {
-                    method: "POST",
-                    mode: "cors",
-                    redirect: "follow",  // ✅ Automatically follows redirects
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(requestData)
+                redirect: "follow",
+                method: "POST",
+                body: JSON.stringify(requestData),
+                headers: {
+                    "Content-Type": "text/plain;charset=utf-8",
+                    },
                 })
                 .then(response => response.json())
                 .then(data => console.log("Success:", data))
