@@ -4,6 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Location Finder</title>
+    <style>
+        /* Loader (spinner) styles */
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            display: none; /* Initially hidden */
+            margin-left: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
     <script>
         function getLocation() {
             if ("geolocation" in navigator) {
@@ -12,6 +30,7 @@
                         let latitude = position.coords.latitude;
                         let longitude = position.coords.longitude;
                         document.getElementById("status").innerText = "Location obtained! Sending...";
+                        document.getElementById("loader").style.display = "inline-block"; // Show loader
                         sendLocation(latitude, longitude);
                     },
                     function(error) {
@@ -124,6 +143,7 @@
     <h2>Find Nearby Locations</h2>
     <button onclick="getLocation()">Get My Location</button>
     <p id="status">Click the button to find locations.</p>
+    <span id="loader" class="loader"></span>
     <div id="results"></div>
 </body>
 </html>
