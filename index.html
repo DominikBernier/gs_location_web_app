@@ -63,6 +63,7 @@
         function displayResults(data) {
             let resultDiv = document.getElementById("results");
             resultDiv.innerHTML = ""; // Clear previous results
+            document.getElementById("loader").style.display = "hidden";
             
             if (data.error) {
                 resultDiv.innerHTML = `<p>Error: ${data.error}</p>`;
