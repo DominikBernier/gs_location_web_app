@@ -154,74 +154,103 @@
             let resultDiv = document.getElementById("results");
             resultDiv.innerHTML = "";
             document.getElementById("loader").style.display = "none";
-
+        
             if (data.error) {
                 resultDiv.innerHTML = `<p>Error: ${data.error}</p>`;
                 return;
             }
-
+        
             if (data.length === 0) {
                 resultDiv.innerHTML = "<p>No locations found.</p>";
                 return;
             }
-
+        
+            // Function to extract numeric value from a "X km" or "X mi" string
+            function extractDistanceValue(distanceStr) {
+                return parseFloat(distanceStr.replace(/[^\d.]/g, "")); // Remove non-numeric characters
+            }
+        
+            // Function to extract travel time in minutes
+            function extractTravelTimeValue(timeStr) {
+                let minutes = 0;
+                let parts = timeStr.match(/(\d+)\s*(hour|hr|h)/i);
+                if (parts) minutes += parseInt(parts[1]) * 60; // Convert hours to minutes
+                parts = timeStr.match(/(\d+)\s*(minute|min|m)/i);
+                if (parts) minutes += parseInt(parts[1]); // Add minutes
+                return minutes;
+            }
+        
+            // Sort data: First by distance, then by travel time if distances are equal
+            data.sort((a, b) => {
+                let distanceA = extractDistanceValue(a.distance);
+                let distanceB = extractDistanceValue(b.distance);
+                let timeA = extractTravelTimeValue(a.travel_time);
+                let timeB = extractTravelTimeValue(b.travel_time);
+        
+                if (distanceA === distanceB) {
+                    return timeA - timeB; // If distances are equal, sort by travel time
+                }
+                return distanceA - distanceB; // Otherwise, sort by distance
+            });
+        
             let tableContainer = document.createElement("div");
             tableContainer.classList.add("table-container");
-
+        
             let table = document.createElement("table");
-
+        
             let thead = document.createElement("thead");
             let headerRow = document.createElement("tr");
             let headers = ["Select", "Name", "Address", "Distance", "Travel Time"];
-            
+        
             headers.forEach(text => {
                 let th = document.createElement("th");
                 th.textContent = text;
                 headerRow.appendChild(th);
             });
-
+        
             thead.appendChild(headerRow);
             table.appendChild(thead);
-
+        
             let tbody = document.createElement("tbody");
-
+        
             data.forEach(entry => {
                 let row = document.createElement("tr");
-
+        
                 let checkboxCell = document.createElement("td");
                 let checkbox = document.createElement("input");
                 checkbox.type = "checkbox";
                 checkbox.addEventListener("change", function() {
                     toggleSelection(row, entry.address, this);
                 });
-
+        
                 checkboxCell.appendChild(checkbox);
                 row.appendChild(checkboxCell);
-
+        
                 let nameCell = document.createElement("td");
                 nameCell.textContent = entry.name;
                 row.appendChild(nameCell);
-
+        
                 let addressCell = document.createElement("td");
                 addressCell.textContent = entry.address;
                 row.appendChild(addressCell);
-
+        
                 let distanceCell = document.createElement("td");
                 distanceCell.textContent = entry.distance;
                 row.appendChild(distanceCell);
-
+        
                 let travelTimeCell = document.createElement("td");
                 travelTimeCell.textContent = entry.travel_time;
                 row.appendChild(travelTimeCell);
-
+        
                 tbody.appendChild(row);
             });
-
+        
             table.appendChild(tbody);
             tableContainer.appendChild(table);
             resultDiv.appendChild(tableContainer);
             document.getElementById("status").innerText = "Results received!";
         }
+
 
         function toggleSelection(row, address, checkbox) {
             if (checkbox.checked) {
