@@ -7,27 +7,30 @@ function getLocation() {
     document.getElementById("status").innerText = "Fetching user location...";
     document.getElementById("loader").style.display = "inline-block";
     
-    if ("geolocation" in navigator) {
-        navigator.geolocation.getCurrentPosition(
-            function(position) {
-                userLocation = {
-                    latitude: position.coords.latitude,
-                    longitude: position.coords.longitude
-                };
-                
-                document.getElementById("status").innerText = "Location obtained! Sending...";
-                
-                sendLocation(userLocation.latitude, userLocation.longitude);
-            },
-            function(error) {
-                document.getElementById("status").innerText = "Error getting location: " + error.message;
-                document.getElementById("getLocationBtn").disabled = false;
-            }
-        );
-    } else {
-        document.getElementById("status").innerText = "Geolocation not supported by this browser.";
-        document.getElementById("getLocationBtn").disabled = false;
-    }
+    // Let UI update first, then call getCurrentPosition()
+    setTimeout(() => {
+        if ("geolocation" in navigator) {
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+                    userLocation = {
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude
+                    };
+
+                    document.getElementById("status").innerText = "Location obtained! Sending...";
+                    
+                    sendLocation(userLocation.latitude, userLocation.longitude);
+                },
+                function(error) {
+                    document.getElementById("status").innerText = "Error getting location: " + error.message;
+                    document.getElementById("getLocationBtn").disabled = false;
+                }
+            );
+        } else {
+            document.getElementById("status").innerText = "Geolocation not supported by this browser.";
+            document.getElementById("getLocationBtn").disabled = false;
+        }
+    }, 0); // Forces UI update before geolocation starts
 }
 
 function sendLocation(lat, lng) {
