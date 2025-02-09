@@ -10,6 +10,7 @@ function getLocation() {
                     latitude: position.coords.latitude,
                     longitude: position.coords.longitude
                 };
+                console.log(document.getElementById("getLocationBtn"));
                 document.getElementById("getLocationBtn").disabled = true;
                 document.getElementById("status").innerText = "Location obtained! Sending...";
                 document.getElementById("loader").style.display = "inline-block"; 
