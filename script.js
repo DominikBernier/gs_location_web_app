@@ -16,10 +16,7 @@ function getLocation() {
                 document.getElementById("status").innerText = "Location obtained! Sending...";
                 document.getElementById("loader").style.display = "inline-block"; 
                 
-                sendLocation(userLocation.latitude, userLocation.longitude)
-                    .finally(() => {
-                        document.getElementById("getLocationBtn").disabled = false;
-                    });
+                sendLocation(userLocation.latitude, userLocation.longitude);
             },
             function(error) {
                 document.getElementById("status").innerText = "Error getting location: " + error.message;
@@ -47,9 +44,9 @@ function sendLocation(lat, lng) {
     })
     .then(response => response.json())
     .then(data => displayResults(data))
-    .catch(error => {
-        console.error("Fetch Error:", error);
-        throw error; // Ensure re-enabling on failure
+    .catch(error => console.error("Fetch Error:", error));
+    .finally(() => {
+        document.getElementById("getLocationBtn").disabled = false; // Re-enable button in all cases
     });
 }
 
