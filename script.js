@@ -10,7 +10,6 @@ function getLocation() {
                     latitude: position.coords.latitude,
                     longitude: position.coords.longitude
                 };
-                console.log(document.getElementById("getLocationBtn"));
                 document.getElementById("getLocationBtn").disabled = true;
                 document.getElementById("status").innerText = "Location obtained! Sending...";
                 document.getElementById("loader").style.display = "inline-block"; 
@@ -40,7 +39,10 @@ function sendLocation(lat, lng) {
     })
     .then(response => response.json())
     .then(data => displayResults(data))
-    .catch(error => console.error("Fetch Error:", error));
+    .catch(error => {
+        console.error("Fetch Error:", error);
+        document.getElementById("getLocationBtn").disabled = false; // Ensure re-enabling on failure
+    });
 }
 
 function displayResults(data) {
