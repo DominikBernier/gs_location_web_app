@@ -10,6 +10,7 @@ function getLocation() {
                     latitude: position.coords.latitude,
                     longitude: position.coords.longitude
                 };
+                document.getElementById("getLocationBtn").disabled = true;
                 document.getElementById("status").innerText = "Location obtained! Sending...";
                 document.getElementById("loader").style.display = "inline-block"; 
                 sendLocation(userLocation.latitude, userLocation.longitude);
@@ -42,6 +43,7 @@ function sendLocation(lat, lng) {
 }
 
 function displayResults(data) {
+    document.getElementById("getLocationBtn").disabled = false;
     selectedAddresses = [];
     let resultDiv = document.getElementById("results");
     resultDiv.innerHTML = "";
