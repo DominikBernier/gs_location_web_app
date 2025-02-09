@@ -44,8 +44,8 @@ function sendLocation(lat, lng) {
     })
     .then(response => response.json())
     .then(data => displayResults(data))
-    .catch(error => console.error("Fetch Error:", error));
-    .finally(function() { 
+    .catch(error => console.error("Fetch Error:", error))
+    .finally(() => { 
         document.getElementById("getLocationBtn").disabled = false; 
         console.log("Re-enabling button...");
     });
