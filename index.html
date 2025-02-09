@@ -5,6 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Location Finder</title>
     <style>
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            text-align: center;
+        }
+
+        h2 {
+            color: #333;
+            margin-top: 20px;
+        }
+
+        /* Button Styles */
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            margin: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
         /* Loader (spinner) styles */
         .loader {
             border: 4px solid #f3f3f3;
@@ -22,20 +53,55 @@
             100% { transform: rotate(360deg); }
         }
 
+        /* Responsive Table */
+        .table-container {
+            max-width: 95%;
+            margin: 20px auto;
+            overflow-x: auto; /* Enables horizontal scrolling on small screens */
+            background: white;
+            border-radius: 8px;
+            padding: 10px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 10px;
+            min-width: 600px; /* Ensures table does not shrink too much */
         }
 
         th, td {
-            border: 1px solid black;
-            padding: 8px;
+            border: 1px solid #ddd;
+            padding: 10px;
             text-align: left;
+            white-space: nowrap; /* Prevents text from wrapping */
         }
 
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        /* Highlight selected row */
         .highlight {
-            background-color: lightblue;
+            background-color: #d9f1ff !important;
+        }
+
+        /* Mobile Adaptation */
+        @media screen and (max-width: 768px) {
+            button {
+                width: 90%;
+                font-size: 14px;
+            }
+
+            .table-container {
+                width: 100%;
+                padding: 5px;
+            }
+
+            table {
+                font-size: 14px;
+            }
         }
     </style>
     <script>
@@ -66,7 +132,7 @@
         }
 
         function sendLocation(lat, lng) {
-            let url = "https://script.google.com/macros/s/AKfycbxxfU6ifcbqGgy_Gz8E9F0jGzZJZ4AcfvdpM0QidNoMXBRIoTg45jZlfsiY7Uwm5_di/exec";
+            let url = "https://script.google.com/macros/s/AKfycbwcFfPAA7pJJLy-pencEU30TqMY0Nz2DNVad6olZlfYga6qJCTPcKLR11CrUy7zwqoo/exec";
         
             let requestData = { latitude: lat, longitude: lng };
             
@@ -84,7 +150,6 @@
         }
 
         function displayResults(data) {
-            selectedAddresses = [];
             let resultDiv = document.getElementById("results");
             resultDiv.innerHTML = "";
             document.getElementById("loader").style.display = "none";
@@ -98,6 +163,9 @@
                 resultDiv.innerHTML = "<p>No locations found.</p>";
                 return;
             }
+
+            let tableContainer = document.createElement("div");
+            tableContainer.classList.add("table-container");
 
             let table = document.createElement("table");
 
@@ -149,7 +217,8 @@
             });
 
             table.appendChild(tbody);
-            resultDiv.appendChild(table);
+            tableContainer.appendChild(table);
+            resultDiv.appendChild(tableContainer);
             document.getElementById("status").innerText = "Results received!";
         }
 
