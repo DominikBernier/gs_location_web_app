@@ -3,6 +3,8 @@ let maxWaypoints = 10;
 let userLocation = null;
 let glassShieldCoordinates = [45.34786, -73.69077];
 function getLocation() {
+    document.getElementById("getLocationBtn").disabled = true;
+    
     if ("geolocation" in navigator) {
         navigator.geolocation.getCurrentPosition(
             function(position) {
@@ -10,17 +12,23 @@ function getLocation() {
                     latitude: position.coords.latitude,
                     longitude: position.coords.longitude
                 };
-                document.getElementById("getLocationBtn").disabled = true;
+                
                 document.getElementById("status").innerText = "Location obtained! Sending...";
                 document.getElementById("loader").style.display = "inline-block"; 
-                sendLocation(userLocation.latitude, userLocation.longitude);
+                
+                sendLocation(userLocation.latitude, userLocation.longitude)
+                    .finally(() => {
+                        document.getElementById("getLocationBtn").disabled = false;
+                    });
             },
             function(error) {
                 document.getElementById("status").innerText = "Error getting location: " + error.message;
+                document.getElementById("getLocationBtn").disabled = false;
             }
         );
     } else {
         document.getElementById("status").innerText = "Geolocation not supported by this browser.";
+        document.getElementById("getLocationBtn").disabled = false;
     }
 }
 
@@ -41,12 +49,11 @@ function sendLocation(lat, lng) {
     .then(data => displayResults(data))
     .catch(error => {
         console.error("Fetch Error:", error);
-        document.getElementById("getLocationBtn").disabled = false; // Ensure re-enabling on failure
+        throw error; // Ensure re-enabling on failure
     });
 }
 
 function displayResults(data) {
-    document.getElementById("getLocationBtn").disabled = false;
     selectedAddresses = [];
     let resultDiv = document.getElementById("results");
     resultDiv.innerHTML = "";
