@@ -4,6 +4,8 @@ let userLocation = null;
 let glassShieldCoordinates = [45.34786, -73.69077];
 function getLocation() {
     document.getElementById("getLocationBtn").disabled = true;
+    document.getElementById("status").innerText = "Fetching user location...";
+    document.getElementById("loader").style.display = "inline-block";
     
     if ("geolocation" in navigator) {
         navigator.geolocation.getCurrentPosition(
@@ -14,7 +16,6 @@ function getLocation() {
                 };
                 
                 document.getElementById("status").innerText = "Location obtained! Sending...";
-                document.getElementById("loader").style.display = "inline-block"; 
                 
                 sendLocation(userLocation.latitude, userLocation.longitude);
             },
