@@ -3,34 +3,44 @@ let maxWaypoints = 10;
 let userLocation = null;
 let glassShieldCoordinates = [45.34786, -73.69077];
 function getLocation() {
-    document.getElementById("getLocationBtn").disabled = true;
-    document.getElementById("status").innerText = "Fetching user location...";
-    document.getElementById("loader").style.display = "inline-block";
+    let statusElement = document.getElementById("status");
+    let loaderElement = document.getElementById("loader");
+    let buttonElement = document.getElementById("getLocationBtn");
     
-    // Let UI update first, then call getCurrentPosition()
-    setTimeout(() => {
-        if ("geolocation" in navigator) {
-            navigator.geolocation.getCurrentPosition(
-                function(position) {
-                    userLocation = {
-                        latitude: position.coords.latitude,
-                        longitude: position.coords.longitude
-                    };
+     // 1️⃣ Disable button and show loading message
+    buttonElement.disabled = true;
+    statusElement.innerText = "Fetching user location...";
+    loaderElement.style.display = "inline-block";  // Show the loading animation
+    
+    // 2️⃣ Let the browser update the UI first
+    requestAnimationFrame(() => {
+        setTimeout(() => {
+            if ("geolocation" in navigator) {
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        userLocation = {
+                            latitude: position.coords.latitude,
+                            longitude: position.coords.longitude
+                        };
 
-                    document.getElementById("status").innerText = "Location obtained! Sending...";
-                    
-                    sendLocation(userLocation.latitude, userLocation.longitude);
-                },
-                function(error) {
-                    document.getElementById("status").innerText = "Error getting location: " + error.message;
-                    document.getElementById("getLocationBtn").disabled = false;
-                }
-            );
-        } else {
-            document.getElementById("status").innerText = "Geolocation not supported by this browser.";
-            document.getElementById("getLocationBtn").disabled = false;
-        }
-    }, 0); // Forces UI update before geolocation starts
+                        // 3️⃣ Update status and send location
+                        statusElement.innerText = "Location obtained! Sending...";
+                        
+                        sendLocation(userLocation.latitude, userLocation.longitude);
+                    },
+                    function(error) {
+                        statusElement.innerText = "Error getting location: " + error.message;
+                        buttonElement.disabled = false;
+                        loaderElement.style.display = "none";  // Hide loading animation
+                    }
+                );
+            } else {
+                statusElement.innerText = "Geolocation not supported by this browser.";
+                buttonElement.disabled = false;
+                loaderElement.style.display = "none";  // Hide loading animation
+            }
+        }, 100); // Give the browser enough time to update UI
+    });
 }
 
 function sendLocation(lat, lng) {
